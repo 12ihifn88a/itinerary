@@ -33,7 +33,7 @@
         <section class="intro" id="top" aria-labelledby="page-title">
           <div>
             <p class="eyebrow">PLAN WITH INTENTION</p>
-            <h1 id="page-title">From map marks,<br /><span>to living journeys</span></h1>
+            <h1 id="page-title">From map marks<br /><span>To living journeys</span></h1>
             <p class="lead">I turn routes, pacing, budgets, and the unexpected into clear, flexible travel plans.</p>
           </div>
           <div class="intro-aside" aria-label="Planning approach">
@@ -127,5 +127,35 @@
         <footer><p>Turning places worth visiting into journeys that work.</p><span>© 2026 TRAVEL PLANNING PORTFOLIO</span></footer>
       </div>
     </main>
+    <script>
+      const touchedCards = new Map();
+      const cardTimers = new WeakMap();
+
+      const animateCardAtTouch = (touch) => {
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        const card = target?.closest(".plan-card");
+        if (!card) return;
+
+        let cardsSeenByTouch = touchedCards.get(touch.identifier);
+        if (!cardsSeenByTouch) {
+          cardsSeenByTouch = new Set();
+          touchedCards.set(touch.identifier, cardsSeenByTouch);
+        }
+        if (cardsSeenByTouch.has(card)) return;
+        cardsSeenByTouch.add(card);
+
+        window.clearTimeout(cardTimers.get(card));
+        card.classList.add("touch-feedback");
+        cardTimers.set(card, window.setTimeout(() => card.classList.remove("touch-feedback"), 520));
+      };
+
+      const trackTouches = (event) => Array.from(event.changedTouches).forEach(animateCardAtTouch);
+      const clearTouches = (event) => Array.from(event.changedTouches).forEach((touch) => touchedCards.delete(touch.identifier));
+
+      document.addEventListener("touchstart", trackTouches, { passive: true });
+      document.addEventListener("touchmove", trackTouches, { passive: true });
+      document.addEventListener("touchend", clearTouches, { passive: true });
+      document.addEventListener("touchcancel", clearTouches, { passive: true });
+    </script>
   </body>
 </html>
