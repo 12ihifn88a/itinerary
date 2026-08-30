@@ -132,6 +132,10 @@
       const tapCancelThreshold = 0.01;
       const touchCardStates = new Map();
 
+      document.addEventListener("pointerdown", (event) => {
+        document.documentElement.classList.toggle("touch-input", event.pointerType === "touch");
+      }, { capture: true, passive: true });
+
       const releaseAfterPressInCompletes = (state) => {
         if (state.releaseTimer) return;
         const elapsed = performance.now() - state.startedAt;
