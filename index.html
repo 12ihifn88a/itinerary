@@ -151,6 +151,7 @@
             startX: event.clientX,
             startY: event.clientY,
             startedAt: performance.now(),
+            hasMoved: false,
             releaseTimer: null,
           };
           touchCardStates.set(event.pointerId, state);
@@ -162,16 +163,27 @@
         const state = touchCardStates.get(event.pointerId);
         if (!state || state.releaseTimer) return;
         const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
-        if (distance > tapCancelThreshold) releaseAfterPressInCompletes(state);
+        if (distance > tapCancelThreshold && !state.hasMoved) {
+          state.hasMoved = true;
+          releaseAfterPressInCompletes(state);
+        }
       }, { capture: true, passive: true });
 
-      const finishTouch = (event) => {
+      document.addEventListener("pointerup", (event) => {
+        const state = touchCardStates.get(event.pointerId);
+        if (!state) return;
+        if (state.hasMoved) {
+          releaseAfterPressInCompletes(state);
+        } else {
+          state.card.classList.remove("touch-feedback");
+          touchCardStates.delete(state.pointerId);
+        }
+      }, { capture: true, passive: true });
+
+      document.addEventListener("pointercancel", (event) => {
         const state = touchCardStates.get(event.pointerId);
         if (state) releaseAfterPressInCompletes(state);
-      };
-
-      document.addEventListener("pointerup", finishTouch, { capture: true, passive: true });
-      document.addEventListener("pointercancel", finishTouch, { capture: true, passive: true });
+      }, { capture: true, passive: true });
     </script>
   </body>
 </html>

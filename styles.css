@@ -15,7 +15,4 @@
 .photo-tile img{display:block;width:100%;height:auto}
 
 @media(max-width:620px){.photography{padding:40px 0 64px}.photo-place+.photo-place{margin-top:44px;padding-top:34px}.photo-place-heading{align-items:flex-start;flex-direction:column;gap:7px}.place-grid{gap:12px}.photo-tile--hero,.photo-tile--landscape,.photo-tile--landscape-half,.photo-tile--portrait,.photo-tile--portrait-half{grid-column:1/-1}.photo-tile{border-radius:15px}}
-.plan-card.touch-feedback{transform:translateY(-7px);border-color:rgba(14,104,105,.42);box-shadow:0 23px 54px rgba(17,73,75,.15)}
-.plan-card.touch-feedback .card-visual img{transform:scale(1.095)}
-.plan-card.touch-feedback .arrow-button{transform:rotate(7deg) scale(1.06)}
-@media(pointer:coarse){.plan-card{touch-action:pan-y pinch-zoom;transition-duration:.16s}.plan-card .card-visual img,.plan-card .arrow-button{transition-duration:.16s}}
+@media(any-pointer:coarse){.plan-card{touch-action:pan-y pinch-zoom;transition-duration:.16s}.plan-card .card-visual img,.plan-card .arrow-button{transition-duration:.16s}.plan-card:hover{transform:none;border-color:rgba(14,104,105,.16);box-shadow:0 12px 45px rgba(17,73,75,.07)}.plan-card:hover .card-visual img{transform:scale(1.035)}.plan-card:hover .arrow-button{transform:none}.plan-card.touch-feedback{position:relative;z-index:2;transform:translateY(-9px) scale(1.055);border-color:rgba(14,104,105,.42);box-shadow:0 26px 58px rgba(17,73,75,.18)}.plan-card.touch-feedback .card-visual img{transform:scale(1.13)}.plan-card.touch-feedback .arrow-button{transform:rotate(7deg) scale(1.08)}}
