@@ -18,3 +18,4 @@
 .plan-card.touch-feedback{transform:translateY(-7px);border-color:rgba(14,104,105,.42);box-shadow:0 23px 54px rgba(17,73,75,.15)}
 .plan-card.touch-feedback .card-visual img{transform:scale(1.095)}
 .plan-card.touch-feedback .arrow-button{transform:rotate(7deg) scale(1.06)}
+@media(pointer:coarse){.plan-card{touch-action:pan-y pinch-zoom;transition-duration:.16s}.plan-card .card-visual img,.plan-card .arrow-button{transition-duration:.16s}}

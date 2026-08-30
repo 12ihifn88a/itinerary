@@ -128,34 +128,50 @@
       </div>
     </main>
     <script>
-      const touchedCards = new Map();
-      const cardTimers = new WeakMap();
+      const pressInDuration = 160;
+      const tapCancelThreshold = 0.01;
+      const touchCardStates = new Map();
 
-      const animateCardAtTouch = (touch) => {
-        const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        const card = target?.closest(".plan-card");
-        if (!card) return;
-
-        let cardsSeenByTouch = touchedCards.get(touch.identifier);
-        if (!cardsSeenByTouch) {
-          cardsSeenByTouch = new Set();
-          touchedCards.set(touch.identifier, cardsSeenByTouch);
-        }
-        if (cardsSeenByTouch.has(card)) return;
-        cardsSeenByTouch.add(card);
-
-        window.clearTimeout(cardTimers.get(card));
-        card.classList.add("touch-feedback");
-        cardTimers.set(card, window.setTimeout(() => card.classList.remove("touch-feedback"), 520));
+      const releaseAfterPressInCompletes = (state) => {
+        if (state.releaseTimer) return;
+        const elapsed = performance.now() - state.startedAt;
+        const remaining = Math.max(0, pressInDuration - elapsed);
+        state.releaseTimer = window.setTimeout(() => {
+          state.card.classList.remove("touch-feedback");
+          touchCardStates.delete(state.pointerId);
+        }, remaining);
       };
 
-      const trackTouches = (event) => Array.from(event.changedTouches).forEach(animateCardAtTouch);
-      const clearTouches = (event) => Array.from(event.changedTouches).forEach((touch) => touchedCards.delete(touch.identifier));
+      document.querySelectorAll(".plan-card").forEach((card) => {
+        card.addEventListener("pointerdown", (event) => {
+          if (event.pointerType !== "touch") return;
+          const state = {
+            pointerId: event.pointerId,
+            card,
+            startX: event.clientX,
+            startY: event.clientY,
+            startedAt: performance.now(),
+            releaseTimer: null,
+          };
+          touchCardStates.set(event.pointerId, state);
+          card.classList.add("touch-feedback");
+        }, { capture: true, passive: true });
+      });
 
-      document.addEventListener("touchstart", trackTouches, { passive: true });
-      document.addEventListener("touchmove", trackTouches, { passive: true });
-      document.addEventListener("touchend", clearTouches, { passive: true });
-      document.addEventListener("touchcancel", clearTouches, { passive: true });
+      document.addEventListener("pointermove", (event) => {
+        const state = touchCardStates.get(event.pointerId);
+        if (!state || state.releaseTimer) return;
+        const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
+        if (distance > tapCancelThreshold) releaseAfterPressInCompletes(state);
+      }, { capture: true, passive: true });
+
+      const finishTouch = (event) => {
+        const state = touchCardStates.get(event.pointerId);
+        if (state) releaseAfterPressInCompletes(state);
+      };
+
+      document.addEventListener("pointerup", finishTouch, { capture: true, passive: true });
+      document.addEventListener("pointercancel", finishTouch, { capture: true, passive: true });
     </script>
   </body>
 </html>
