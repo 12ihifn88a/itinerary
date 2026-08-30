@@ -19,6 +19,6 @@
 html.touch-input .plan-card:hover{transform:none;border-color:rgba(14,104,105,.16);box-shadow:0 12px 45px rgba(17,73,75,.07)}
 html.touch-input .plan-card:hover .card-visual img{transform:scale(1.035)}
 html.touch-input .plan-card:hover .arrow-button{transform:none}
-html.touch-input .plan-card.touch-feedback{position:relative;z-index:2;transform:translateY(-7px);border-color:rgba(14,104,105,.42);box-shadow:0 23px 54px rgba(17,73,75,.15)}
+html.touch-input .plan-card.touch-feedback{position:relative;z-index:2;transform:scale(1.02);border-color:rgba(14,104,105,.42);box-shadow:0 23px 54px rgba(17,73,75,.15)}
 html.touch-input .plan-card.touch-feedback .card-visual img{transform:scale(1.035)}
 html.touch-input .plan-card.touch-feedback .arrow-button{transform:rotate(7deg) scale(1.06)}
